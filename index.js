@@ -79,16 +79,20 @@ function wordMatchingRegex() {
     return regex;
 }
 
+function isCharacter(ch) {
+    return ch.match(wordMatchingRegex()) != null;
+}
+
 function findLongestUpperCaseSequence(text) {
     var m = text.match(wordMatchingRegex());
     if (m === null)
         return '';
 
-    longestCharacterSequence = m[0];
+    var longestCharacterSequence = m[0];
 
     for (var i = 0; i < longestCharacterSequence.length; i++) {
-        if (longestCharacterSequence.substr(0, i) !== longestCharacterSequence.substr(0, i).toUpperCase())
-            return longestCharacterSequence.substr(0, i - 1);
+        if (longestCharacterSequence.substr(0, i + 1) !== longestCharacterSequence.substr(0, i + 1).toUpperCase())
+            return longestCharacterSequence.substr(0, i);
     }
     return longestCharacterSequence;
 }
@@ -111,6 +115,12 @@ function unicodeToBrailleSimple(text) {
         result += charToBraille(text.charAt(i));
     }
     return result;
+}
+
+function peek(text) {
+    if (text.length > 0) {
+        return text.charAt(0);
+    } else return null;
 }
 
 function unicodeToBrailleNew(text) {
@@ -140,6 +150,15 @@ function unicodeToBrailleNew(text) {
 
             //consume the sequence
             text = text.substr(upperCaseSequence.length);
+
+            //look ahead if we continue with lower case letter
+            var nextChar = peek(text);
+            if (nextChar != null) {
+                if (isCharacter(nextChar) && !isUpper(nextChar)) {
+                    //emit lowercase
+                    result += prefixEnd;
+                }
+            }
             continue;
         }
         var numericSequence = findLongestNumericSequence(text);
@@ -190,6 +209,6 @@ function convert() {
     document.getElementById("destination").value = unicodeToBrailleNew(text);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     convert();
 }, false);
