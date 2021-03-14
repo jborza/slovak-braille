@@ -75,21 +75,6 @@ function getBrailleMap() {
     };
 }
 
-function getNumberMap() {
-    return {
-        "1": "a",
-        "2": "b",
-        "3": "c",
-        "4": "d",
-        "5": "e",
-        "6": "f",
-        "7": "g",
-        "8": "h",
-        "9": "i",
-        "0": "j"
-    };
-}
-
 var bm = getBrailleMap();
 var uppercase = String.fromCharCode(0x2820);
 var prefixEnd = String.fromCharCode(0x2830);
@@ -186,7 +171,7 @@ function peek(text) {
     } else return null;
 }
 
-function unicodeToBrailleNew(text) {
+function unicodeToBraille(text) {
     //single capital letter uppercase: b6
     //scan for upper case sequence - interrupted by whitespace, separator, 
     var bm = getBrailleMap();
@@ -254,37 +239,9 @@ function unicodeToBrailleNew(text) {
     return result;
 }
 
-function unicodeToBraille(text) {
-    //slovak braille rules
-    //first break down - numbers get turned into sequences, prefixed with 0x
-    //TODO preprocess numbers
-    //numbers start with b3456 and end with whitespace (so ,.: is allowed)
-
-    //preprocess upper case
-    //single letter is prefixed with b6
-    //multiple letters are prefixed with b6 b6 and are terminated by: space, b56(lowercase), b3456(number)
-    //so we need to apply a regex ([0-9]+ from the current position, keep state)
-
-    var state = 0; // lowercase, uppercase, number
-
-    //
-
-    result = "";
-    bm = getBrailleMap();
-    for (var i = 0; i < text.length; i++) {
-        var ch = text.charAt(i);
-        if (ch in bm) {
-            result += String.fromCharCode(bm[ch]);
-        } else {
-            result += ch;
-        }
-    }
-    return result;
-}
-
 function convert() {
     var text = document.getElementById("source").value;
-    document.getElementById("destination").value = unicodeToBrailleNew(text);
+    document.getElementById("destination").value = unicodeToBraille(text);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
