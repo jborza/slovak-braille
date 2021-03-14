@@ -39,7 +39,7 @@ function getBrailleMap() {
         "ú": 0x282C,
         "v": 0x2827,
         "w": 0x2837,
-        "x": 0x282d,
+        "x": 0x283a,
         "y": 0x283d,
         "ý": 0x282F,
         "z": 0x2835,
