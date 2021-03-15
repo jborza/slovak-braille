@@ -6,9 +6,9 @@ function getBrailleMap() {
         "b": 0x2803,
         "c": 0x2809,
         "č": 0x2829,
-        "d": 0x2819, 
+        "d": 0x2819,
         "ď": 0x2839,
-        "e": 0x2811, 
+        "e": 0x2811,
         "é": 0x281C,
         "f": 0x280B,
         "g": 0x281B,
@@ -65,13 +65,16 @@ function getBrailleMap() {
         "1": 0x2801,
         "2": 0x2803,
         "3": 0x2809,
-        "4": 0x2819, 
-        "5": 0x2811, 
+        "4": 0x2819,
+        "5": 0x2811,
         "6": 0x280B,
         "7": 0x281B,
         "8": 0x2813,
         "9": 0x280a,
         "0": 0x281A,
+        //multi-cell symbols
+        "%": [0x283C, 0x280F],
+        "@": [0x283C, 0x283B]
     };
 }
 
@@ -116,7 +119,6 @@ function findLongestNumericSequence(text) {
     // - continues with anything other than whitespace or letter
     if (text.length == 0)
         return '';
-    var result = '';
     var startsWithNumber = isNumber(text.charAt(0));
     if (!startsWithNumber) {
         return '';
@@ -151,7 +153,14 @@ function isWhitespace(ch) {
 
 function charToBraille(ch) {
     if (ch in bm) {
-        return String.fromCharCode(bm[ch]);
+        var entry = bm[ch];
+        //handle single cell braille table entries
+        if (typeof (entry) === 'number')
+            return String.fromCharCode(bm[ch]);
+        else //or multi cell braille table entries
+            return entry.map(function (f) {
+                return String.fromCharCode(f)
+            }).join('')
     } else {
         return ch;
     }
